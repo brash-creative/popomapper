@@ -132,9 +132,6 @@ class Mapper
      * @param \ReflectionClass $reflection
      * @param                  $key
      *
-     * list($hasProperty, $isSettable, $type, $setter)
-     *
-     *
      * @return bool
      */
     public function inspectParameter(\ReflectionClass $reflection, $key)
