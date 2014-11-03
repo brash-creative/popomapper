@@ -207,7 +207,9 @@ class MapperTest extends PHPUnit_Framework_TestCase
             'erroneous' => 'should be forgotten'
         );
 
-        $result = $mapper->mapSingle($array, $object);
+        $result         = $mapper->mapSingle($array, $object);
+        $nestedArray    = $result->getNestedArray();
+        $array          = $result->getArray();
 
         $this->assertInstanceOf('TestFullClass', $result);
         $this->assertInstanceOf('TestNestedObject', $result->getNested());
@@ -215,10 +217,10 @@ class MapperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $result->getPrivate());
         $this->assertInstanceOf('DateTime', $result->getDate());
         $this->assertTrue(is_array($result->getNestedArray()));
-        $this->assertInstanceOf('TestNestedObject', $result->getNestedArray()[0]);
-        $this->assertInstanceOf('TestNestedObject', $result->getNestedArray()[1]);
+        $this->assertInstanceOf('TestNestedObject', $nestedArray[0]);
+        $this->assertInstanceOf('TestNestedObject', $nestedArray[1]);
         $this->assertTrue(is_array($result->getArray()));
-        $this->assertEquals(2, $result->getArray()[1]);
+        $this->assertEquals(2, $array[1]);
     }
 
     public function testMapMulti()
