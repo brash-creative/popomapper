@@ -14,6 +14,11 @@ class TestFullClass
     private $name;
 
     /**
+     * @var DateTime
+     */
+    private $date;
+
+    /**
      * @var TestNestedObject
      */
     private $nested;
@@ -158,6 +163,25 @@ class TestFullClass
     public function getNonExistentClass()
     {
         return $this->nonExistentClass;
+    }
+
+    /**
+     * @param \DateTime $date
+     *
+     * @return $this
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }
  

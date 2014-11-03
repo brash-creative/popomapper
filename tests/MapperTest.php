@@ -185,6 +185,7 @@ class MapperTest extends PHPUnit_Framework_TestCase
             'id'        => 1,
             'name'      => 'test',
             'private'   => 2,
+            'date'      => '2014-10-01 00:00:00',
             'nested'    => array(
                 'id'    => 100,
                 'name'  => 'nested test'
@@ -212,6 +213,7 @@ class MapperTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('TestNestedObject', $result->getNested());
         $this->assertEquals('test', $result->getName());
         $this->assertEquals(0, $result->getPrivate());
+        $this->assertInstanceOf('DateTime', $result->getDate());
         $this->assertTrue(is_array($result->getNestedArray()));
         $this->assertInstanceOf('TestNestedObject', $result->getNestedArray()[0]);
         $this->assertInstanceOf('TestNestedObject', $result->getNestedArray()[1]);
