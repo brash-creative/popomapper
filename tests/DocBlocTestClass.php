@@ -211,4 +211,3 @@ class DocBlocTestClass
         return $this->nestedArray;
     }
 }
- 
