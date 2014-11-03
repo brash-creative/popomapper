@@ -63,26 +63,11 @@ class Mapper
 
     /**
      * @param $data
-     * @param $object
      *
-     * @return array|object
-     */
-    public function map($data, $object)
-    {
-        if (true === $this->checkIfMulti($data)) {
-            return $this->mapSingle($data, $object);
-        }
-        return $this->mapMulti($data, $object);
-    }
-
-    /**
-     * @param $data
-     * @param $object
-     *
-     * @return object
+     * @return array|mixed
      * @throws MapperException
      */
-    public function mapSingle($data, $object)
+    public function dataToArray($data)
     {
         if (true === is_string($data)) {
             $data   = $this->parseJson($data);
@@ -96,6 +81,34 @@ class Mapper
             throw new MapperException('Invalid data passed to mapper');
         }
 
+        return $data;
+    }
+
+    /**
+     * @param $data
+     * @param $object
+     *
+     * @return array|object
+     */
+    public function map($data, $object)
+    {
+        $data   = $this->dataToArray($data);
+
+        if (true === $this->checkIfMulti($data)) {
+            return $this->mapMulti($data, new \ArrayObject(), $object);
+        }
+        return $this->mapSingle($data, $object);
+    }
+
+    /**
+     * @param array $data
+     * @param       $object
+     *
+     * @return mixed
+     * @throws MapperException
+     */
+    public function mapSingle(array $data, $object)
+    {
         $className  = get_class($object);
         $reflection = new \ReflectionClass($object);
         $nameSpace  = $reflection->getNamespaceName();
@@ -108,7 +121,73 @@ class Mapper
             list($settable, $type, $setter) = $this->inspectedParameters[$className][$key];
 
             if (true === $settable) {
+                if (null === $type) {
+                    $this->setParameter($object, $key, $value, $setter);
+                    continue;
+                }
 
+                if (true === $this->isSimpleType($type)) {
+                    settype($value, $type);
+                    $this->setParameter($object, $key, $value, $setter);
+                    continue;
+                }
+
+                /**
+                 * More complex and user defined types
+                 */
+                if ($type{0} != '\\') {
+                    if ($nameSpace != '') {
+                        $type = '\\' . $nameSpace . '\\' . $type;
+                    }
+                }
+
+                $objectArray    = null;
+                $subType        = null;
+                $child          = null;
+
+                if (substr($type, -2) == '[]') {
+                    $objectArray    = array();
+                    $subType        = substr($type, 0, -2);
+                } elseif (substr($type, -1) == ']') {
+                    list($propertyType, $subType) = explode('[', substr($type, 0, -1));
+                    $objectArray    = new $propertyType();
+                } elseif ($type == 'ArrayObject' || true === is_subclass_of($type, 'ArrayObject')) {
+                    $objectArray    = new $type();
+                }
+
+                if (null !== $objectArray) {
+                    if ($subType{0} != '\\') {
+                        if ($nameSpace != '') {
+                            $subType = $nameSpace . '\\' . $subType;
+                        }
+                    }
+
+                    if (false === class_exists($subType)) {
+                        if (true === $this->getDebug()) {
+                            throw new MapperException('Class ' . $subType . ' does not exist');
+                        }
+                        continue;
+                    }
+
+                    $child  = $this->mapMulti($value, $objectArray, $subType);
+                } elseif (true === $this->isFlatType(gettype($value))) {
+                    if (null !== $value) {
+                        $child = new $type($value);
+                    }
+                } else {
+                    if (false === class_exists($type)) {
+                        if (true === $this->getDebug()) {
+                            throw new MapperException('Class ' . $type . ' does not exist');
+                        }
+
+                        continue;
+                    }
+
+                    $child  = new $type();
+                    $this->mapSingle($value, $child);
+                }
+
+                $this->setParameter($object, $key, $child, $setter);
             }
         }
 
@@ -116,16 +195,29 @@ class Mapper
     }
 
     /**
-     * @param $data
-     * @param $object
+     * @param      $data
+     * @param      $array
+     * @param null $object
      *
      * @return array
      */
-    public function mapMulti($data, $object)
+    public function mapMulti(array $data, $array, $object = null)
     {
-        $maps   = array();
+        foreach ($data as $key => $value) {
+            if (null === $object) {
+                $array[$key]    = $value;
+            } elseif (true === $this->isFlatType(gettype($value))) {
+                if (null === $value) {
+                    $array[$key]    = null;
+                } else {
+                    $array[$key]    = new $object($value);
+                }
+            } else {
+                $array[$key]    = $this->mapSingle($value, new $object());
+            }
+        }
 
-        return $maps;
+        return $array;
     }
 
     /**

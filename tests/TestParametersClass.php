@@ -1,7 +1,7 @@
 <?php
 
 
-class TestClass
+class TestParametersClass
 {
     /**
      * @var int
