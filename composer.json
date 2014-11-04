@@ -1,24 +1,18 @@
 {
-    "name": "brash-creative/popo-mapper",
+    "name": "brash-creative/popomapper",
     "description": "Plain old PHP object mapper",
     "require": {
         "php": ">=5.3"
     },
     "authors": [
         {
-            "name": "paulcrashley",
-            "email": "paulcrashley@gmail.com"
+            "name": "Paul Crashley",
+            "email": "paulcrashley.brash@gmail.com"
         }
     ],
-    "options": {
-        "http": {
-            "proxy": ""
-        }
-    },
     "autoload": {
         "psr-4": {"Brash\\PopoMapper\\": "src/"}
     },
-    "minimum-stability": "dev",
     "require-dev": {
         "phpunit/phpunit": "~4.2"
     }

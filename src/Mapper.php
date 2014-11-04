@@ -135,12 +135,6 @@ class Mapper
                 /**
                  * More complex and user defined types
                  */
-                if ($type{0} != '\\') {
-                    if ($nameSpace != '') {
-                        $type = '\\' . $nameSpace . '\\' . $type;
-                    }
-                }
-
                 $objectArray    = null;
                 $subType        = null;
                 $child          = null;
@@ -156,10 +150,8 @@ class Mapper
                 }
 
                 if (null !== $objectArray) {
-                    if ($subType{0} != '\\') {
-                        if ($nameSpace != '') {
-                            $subType = $nameSpace . '\\' . $subType;
-                        }
+                    if (false === $this->isSimpleType($subType)) {
+                        $subType    = $this->getFullType($subType, $nameSpace);
                     }
 
                     if (false === class_exists($subType)) {
@@ -172,9 +164,12 @@ class Mapper
                     $child  = $this->mapMulti($value, $objectArray, $subType);
                 } elseif (true === $this->isFlatType(gettype($value))) {
                     if (null !== $value) {
-                        $child = new $type($value);
+                        $type   = $this->getFullType($type, $nameSpace);
+                        $child  = new $type($value);
                     }
                 } else {
+                    $type   = $this->getFullType($type, $nameSpace);
+
                     if (false === class_exists($type)) {
                         if (true === $this->getDebug()) {
                             throw new MapperException('Class ' . $type . ' does not exist');
@@ -263,6 +258,22 @@ class Mapper
         }
 
         return $settings;
+    }
+
+    /**
+     * @param $type
+     * @param $nameSpace
+     *
+     * @return string
+     */
+    public function getFullType($type, $nameSpace)
+    {
+        if ($type{0} != '\\') {
+            if ($nameSpace != '') {
+                $type = '\\' . $nameSpace . '\\' . $type;
+            }
+        }
+        return $type;
     }
 
     /**
