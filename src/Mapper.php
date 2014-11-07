@@ -55,10 +55,8 @@ class Mapper
      */
     public function checkIfMulti($data)
     {
-        if (count($data) == count($data, COUNT_RECURSIVE)) {
-            return false;
-        }
-        return true;
+        rsort( $data );
+        return isset( $data[0] ) && is_array( $data[0] );
     }
 
     /**
