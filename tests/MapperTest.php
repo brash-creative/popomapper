@@ -7,28 +7,6 @@ include 'TestFullClass.php';
 
 class MapperTest extends PHPUnit_Framework_TestCase
 {
-    public function testMultiCheckWithOneDimension()
-    {
-        $test       = array('name' => 'test 1');
-        $mapper     = new \Brash\PopoMapper\Mapper();
-        $result     = $mapper->checkIfMulti($test);
-
-        $this->assertFalse($result);
-    }
-
-    public function testMultiCheckWithMulti()
-    {
-        $test       = array(
-            array('name' => 'test 1'),
-            array('name' => 'test 2')
-        );
-
-        $mapper     = new \Brash\PopoMapper\Mapper();
-        $result     = $mapper->checkIfMulti($test);
-
-        $this->assertTrue($result);
-    }
-
     /**
      * @expectedException        \Brash\PopoMapper\MapperException
      * @expectedExceptionMessage Invalid JSON string provided

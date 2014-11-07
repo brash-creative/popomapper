@@ -51,17 +51,6 @@ class Mapper
     /**
      * @param $data
      *
-     * @return array
-     */
-    public function checkIfMulti($data)
-    {
-        rsort( $data );
-        return isset( $data[0] ) && is_array( $data[0] );
-    }
-
-    /**
-     * @param $data
-     *
      * @return array|mixed
      * @throws MapperException
      */
@@ -83,30 +72,15 @@ class Mapper
     }
 
     /**
-     * @param $data
-     * @param $object
-     *
-     * @return array|object
-     */
-    public function map($data, $object)
-    {
-        $data   = $this->dataToArray($data);
-
-        if (true === $this->checkIfMulti($data)) {
-            return $this->mapMulti($data, new \ArrayObject(), $object);
-        }
-        return $this->mapSingle($data, $object);
-    }
-
-    /**
-     * @param array $data
-     * @param       $object
+     * @param  $data
+     * @param  $object
      *
      * @return mixed
      * @throws MapperException
      */
-    public function mapSingle(array $data, $object)
+    public function mapSingle($data, $object)
     {
+        $data       = $this->dataToArray($data);
         $className  = get_class($object);
         $reflection = new \ReflectionClass($object);
         $nameSpace  = $reflection->getNamespaceName();
@@ -194,8 +168,10 @@ class Mapper
      *
      * @return array
      */
-    public function mapMulti(array $data, $array, $object = null)
+    public function mapMulti($data, $array, $object = null)
     {
+        $data   = $this->dataToArray($data);
+
         foreach ($data as $key => $value) {
             if (null === $object) {
                 $array[$key]    = $value;

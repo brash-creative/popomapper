@@ -181,7 +181,7 @@ Application code
 ```php
 <?php
 $mapper     = new Mapper();
-$client     = $mapper->map($data, new Client());
+$client     = $mapper->mapSingle($data, new Client());
 
 ```
 
@@ -201,5 +201,14 @@ $data   = '[
         "name": "Client 2"
     }
 ]'
+
+```
+
+Application code
+
+```php
+<?php
+$mapper     = new Mapper();
+$client     = $mapper->mapMulti($data, new ArrayObject(), new Client());
 
 ```

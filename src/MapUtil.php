@@ -20,6 +20,21 @@ class MapUtil
         if (null === self::$mapper) {
             self::$mapper = new Mapper();
         }
-        return self::$mapper->map($data, $object);
+        return self::$mapper->mapSingle($data, $object);
+    }
+
+    /**
+     * @param $data
+     * @param $collectionType
+     * @param $object
+     *
+     * @return array
+     */
+    public static function mapMulti($data, $collectionType, $object)
+    {
+        if (null === self::$mapper) {
+            self::$mapper = new Mapper();
+        }
+        return self::$mapper->mapMulti($data, $collectionType, $object);
     }
 }
