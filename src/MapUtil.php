@@ -5,11 +5,6 @@ namespace Brash\PopoMapper;
 class MapUtil
 {
     /**
-     * @var \Brash\PopoMapper\Mapper
-     */
-    private static $mapper;
-
-    /**
      * @param $data
      * @param $object
      *
@@ -17,10 +12,8 @@ class MapUtil
      */
     public static function map($data, $object)
     {
-        if (null === self::$mapper) {
-            self::$mapper = new Mapper();
-        }
-        return self::$mapper->mapSingle($data, $object);
+        $mapper = new Mapper();
+        return $mapper->mapSingle($data, $object);
     }
 
     /**
@@ -32,9 +25,7 @@ class MapUtil
      */
     public static function mapMulti($data, $collectionType, $object)
     {
-        if (null === self::$mapper) {
-            self::$mapper = new Mapper();
-        }
-        return self::$mapper->mapMulti($data, $collectionType, $object);
+        $mapper = new Mapper();
+        return $mapper->mapMulti($data, $collectionType, $object);
     }
 }
