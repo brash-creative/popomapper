@@ -1,4 +1,4 @@
-# Plain Old PHP Object mapper
+# Plain Old PHP Object JSON mapper
 
 Takes data held in a JSON or array format, and maps it to an application's PHP objects using docblock annotations for parameter types.
 
