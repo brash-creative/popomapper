@@ -1,6 +1,6 @@
 {
     "name": "brash-creative/popomapper",
-    "description": "Plain old PHP object mapper",
+    "description": "Plain old PHP object JSON mapper - Map json or array structures to a POPO",
     "require": {
         "php": ">=5.3"
     },
