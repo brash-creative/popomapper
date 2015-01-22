@@ -93,7 +93,7 @@ class Mapper
             list($settable, $type, $setter) = $this->inspectedParameters[$className][$key];
 
             if (true === $settable) {
-                if (null === $type) {
+                if (true === empty($type) || 'mixed' == $type) {
                     $this->setParameter($object, $key, $value, $setter);
                     continue;
                 }
@@ -116,6 +116,11 @@ class Mapper
                     $subType        = substr($type, 0, -2);
                 } elseif (substr($type, -1) == ']') {
                     list($propertyType, $subType) = explode('[', substr($type, 0, -1));
+
+                    if (!$this->isSimpleType($propertyType)) {
+                        $propertyType = $this->getFullType($propertyType, $nameSpace);
+                    }
+
                     $objectArray    = new $propertyType();
                 } elseif ($type == 'ArrayObject' || true === is_subclass_of($type, 'ArrayObject')) {
                     $objectArray    = new $type();
@@ -133,7 +138,11 @@ class Mapper
                         continue;
                     }
 
-                    $child  = $this->mapMulti($value, $objectArray, $subType);
+                    if (null === $value) {
+                        $child  = null;
+                    } else {
+                        $child  = $this->mapMulti($value, $objectArray, $subType);
+                    }
                 } elseif (true === $this->isFlatType(gettype($value))) {
                     if (null !== $value) {
                         $type   = $this->getFullType($type, $nameSpace);
@@ -281,6 +290,8 @@ class Mapper
      */
     public function isSimpleType($type)
     {
+        $type   = strtolower($type);
+
         return $type == 'string'
         || $type == 'boolean' || $type == 'bool'
         || $type == 'integer' || $type == 'int'
@@ -297,7 +308,10 @@ class Mapper
      */
     public function isFlatType($type)
     {
-        return $type == 'NULL'
+        $type   = strtolower($type);
+
+        return $type == 'null'
+        || $type == 'mixed'
         || $type == 'string'
         || $type == 'boolean' || $type == 'bool'
         || $type == 'integer' || $type == 'int'

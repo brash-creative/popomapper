@@ -4,6 +4,7 @@ include 'DocBlocTestClass.php';
 include 'TestParametersClass.php';
 include 'TestNestedObject.php';
 include 'TestFullClass.php';
+include 'NamespaceTest/TestNamespace.php';
 
 class MapperTest extends PHPUnit_Framework_TestCase
 {
@@ -77,22 +78,31 @@ class MapperTest extends PHPUnit_Framework_TestCase
     {
         $mapper     = new \Brash\PopoMapper\Mapper();
         $result1    = $mapper->isFlatType('bool');
-        $result2    = $mapper->isFlatType('ArrayObject');
+        $result2    = $mapper->isFlatType('mixed');
+        $result3    = $mapper->isFlatType('ArrayObject');
 
         $this->assertTrue($result1);
-        $this->assertFalse($result2);
+        $this->assertTrue($result2);
+        $this->assertFalse($result3);
     }
 
     public function testSetParameter()
     {
         $mapper     = new \Brash\PopoMapper\Mapper();
         $object     = new TestParametersClass();
+        $mixObject  = new ArrayObject();
 
         $mapper->setParameter($object, 'id', 1, null);
         $mapper->setParameter($object, 'name', 'test', 'setName');
+        $mapper->setParameter($object, 'mixed', 'mixed', 'setMixed');
+        $mapper->setParameter($object, 'objectMixed', $mixObject, 'setObjectMixed');
+        $mapper->setParameter($object, 'empty', 'empty', 'setEmpty');
 
         $this->assertEquals(1, $object->id);
         $this->assertEquals('test', $object->getName());
+        $this->assertEquals('mixed', $object->getMixed());
+        $this->assertInstanceOf('ArrayObject', $object->getObjectMixed());
+        $this->assertEquals('empty', $object->getEmpty());
     }
 
     public function testNonExistantParameter()
@@ -178,6 +188,10 @@ class MapperTest extends PHPUnit_Framework_TestCase
                     'name'  => 'nested array test 2'
                 )
             ),
+            'nestedNamespace'   => array(
+                'id'    => 1000,
+                'name'  => 'nested namespace test'
+            ),
             'nonExistentClass'  => array(
                 array('id'    => 1)
             ),
@@ -197,6 +211,8 @@ class MapperTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($result->getNestedArray()));
         $this->assertInstanceOf('TestNestedObject', $nestedArray[0]);
         $this->assertInstanceOf('TestNestedObject', $nestedArray[1]);
+        $this->assertInstanceOf('NamespaceTest\TestNamespace', $result->getNestedNamespace());
+        $this->assertEquals(1000, $result->getNestedNamespace()->getId());
         $this->assertTrue(is_array($result->getArray()));
         $this->assertEquals(2, $array[1]);
     }
