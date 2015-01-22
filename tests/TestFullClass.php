@@ -29,6 +29,11 @@ class TestFullClass
     private $nestedArray;
 
     /**
+     * @var NamespaceTest\TestNamespace
+     */
+    private $nestedNamespace;
+
+    /**
      * @var NonExistentClass[]
      */
     private $nonExistentClass;
@@ -117,6 +122,25 @@ class TestFullClass
     public function getNestedArray()
     {
         return $this->nestedArray;
+    }
+
+    /**
+     * @param \NamespaceTest\TestNamespace $nestedNamespace
+     *
+     * @return $this
+     */
+    public function setNestedNamespace($nestedNamespace)
+    {
+        $this->nestedNamespace = $nestedNamespace;
+        return $this;
+    }
+
+    /**
+     * @return \NamespaceTest\TestNamespace
+     */
+    public function getNestedNamespace()
+    {
+        return $this->nestedNamespace;
     }
 
     /**

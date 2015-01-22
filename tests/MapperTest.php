@@ -4,6 +4,7 @@ include 'DocBlocTestClass.php';
 include 'TestParametersClass.php';
 include 'TestNestedObject.php';
 include 'TestFullClass.php';
+include 'NamespaceTest/TestNamespace.php';
 
 class MapperTest extends PHPUnit_Framework_TestCase
 {
@@ -187,6 +188,10 @@ class MapperTest extends PHPUnit_Framework_TestCase
                     'name'  => 'nested array test 2'
                 )
             ),
+            'nestedNamespace'   => array(
+                'id'    => 1000,
+                'name'  => 'nested namespace test'
+            ),
             'nonExistentClass'  => array(
                 array('id'    => 1)
             ),
@@ -206,6 +211,8 @@ class MapperTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($result->getNestedArray()));
         $this->assertInstanceOf('TestNestedObject', $nestedArray[0]);
         $this->assertInstanceOf('TestNestedObject', $nestedArray[1]);
+        $this->assertInstanceOf('NamespaceTest\TestNamespace', $result->getNestedNamespace());
+        $this->assertEquals(1000, $result->getNestedNamespace()->getId());
         $this->assertTrue(is_array($result->getArray()));
         $this->assertEquals(2, $array[1]);
     }
