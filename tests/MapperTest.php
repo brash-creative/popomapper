@@ -95,11 +95,13 @@ class MapperTest extends PHPUnit_Framework_TestCase
         $mapper->setParameter($object, 'name', 'test', 'setName');
         $mapper->setParameter($object, 'mixed', 'mixed', 'setMixed');
         $mapper->setParameter($object, 'objectMixed', $mixObject, 'setObjectMixed');
+        $mapper->setParameter($object, 'empty', 'empty', 'setEmpty');
 
         $this->assertEquals(1, $object->id);
         $this->assertEquals('test', $object->getName());
         $this->assertEquals('mixed', $object->getMixed());
         $this->assertInstanceOf('ArrayObject', $object->getObjectMixed());
+        $this->assertEquals('empty', $object->getEmpty());
     }
 
     public function testNonExistantParameter()

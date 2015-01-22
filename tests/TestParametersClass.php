@@ -33,6 +33,8 @@ class TestParametersClass
      */
     protected $objectMixed = null;
 
+    protected $empty;
+
     /**
      * @param string $name
      *
@@ -107,6 +109,25 @@ class TestParametersClass
     public function getObjectMixed()
     {
         return $this->objectMixed;
+    }
+
+    /**
+     * @param mixed $empty
+     *
+     * @return $this
+     */
+    public function setEmpty($empty)
+    {
+        $this->empty = $empty;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpty()
+    {
+        return $this->empty;
     }
 }
  
