@@ -93,7 +93,7 @@ class Mapper
             list($settable, $type, $setter) = $this->inspectedParameters[$className][$key];
 
             if (true === $settable) {
-                if (null === $type) {
+                if (null === $type || 'mixed' == $type) {
                     $this->setParameter($object, $key, $value, $setter);
                     continue;
                 }
@@ -281,6 +281,8 @@ class Mapper
      */
     public function isSimpleType($type)
     {
+        $type   = strtolower($type);
+
         return $type == 'string'
         || $type == 'boolean' || $type == 'bool'
         || $type == 'integer' || $type == 'int'
@@ -297,7 +299,10 @@ class Mapper
      */
     public function isFlatType($type)
     {
-        return $type == 'NULL'
+        $type   = strtolower($type);
+
+        return $type == 'null'
+        || $type == 'mixed'
         || $type == 'string'
         || $type == 'boolean' || $type == 'bool'
         || $type == 'integer' || $type == 'int'

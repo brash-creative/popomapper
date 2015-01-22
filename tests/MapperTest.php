@@ -77,22 +77,29 @@ class MapperTest extends PHPUnit_Framework_TestCase
     {
         $mapper     = new \Brash\PopoMapper\Mapper();
         $result1    = $mapper->isFlatType('bool');
-        $result2    = $mapper->isFlatType('ArrayObject');
+        $result2    = $mapper->isFlatType('mixed');
+        $result3    = $mapper->isFlatType('ArrayObject');
 
         $this->assertTrue($result1);
-        $this->assertFalse($result2);
+        $this->assertTrue($result2);
+        $this->assertFalse($result3);
     }
 
     public function testSetParameter()
     {
         $mapper     = new \Brash\PopoMapper\Mapper();
         $object     = new TestParametersClass();
+        $mixObject  = new ArrayObject();
 
         $mapper->setParameter($object, 'id', 1, null);
         $mapper->setParameter($object, 'name', 'test', 'setName');
+        $mapper->setParameter($object, 'mixed', 'mixed', 'setMixed');
+        $mapper->setParameter($object, 'objectMixed', $mixObject, 'setObjectMixed');
 
         $this->assertEquals(1, $object->id);
         $this->assertEquals('test', $object->getName());
+        $this->assertEquals('mixed', $object->getMixed());
+        $this->assertInstanceOf('ArrayObject', $object->getObjectMixed());
     }
 
     public function testNonExistantParameter()
